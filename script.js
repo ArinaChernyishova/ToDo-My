@@ -1,11 +1,5 @@
-const inputBox = document.getElementById("input-box");
-const listContainer = document.getElementById("list-container");
 let taskList = []
-class Task {
-    constructor(text ) {
-        this.text = text;
-    }
-}
+
 function addTask() {
     if(inputBox.value === '') {
         alert('Вы должны что-то написать!')
@@ -14,6 +8,7 @@ function addTask() {
         li.innerHTML = inputBox.value;        
         let t = new Task(li.textContent)
         taskList.push(t)
+        li.setAttribute(TASK_ID_ATTR, t.id);
         listContainer.appendChild(li);
         let span = document.createElement("span");
         span.innerHTML = "\u00d7";
@@ -23,14 +18,28 @@ function addTask() {
     saveData();
 }
 
+function completeTask(element) {
+    element.classList.toggle('checked');
+    let id = element.getAttribute(TASK_ID_ATTR)
+    let task = taskList.find(x => x.id == +id)
+    task.complete = !task.complete
+    saveData();
+}
+
+function removeTask(element) {
+    element.parentElement.remove();
+    let id = element.parentElement.getAttribute(TASK_ID_ATTR)
+    taskList = taskList.filter( x=>x.id != id)
+    saveData();
+}
+
 listContainer.addEventListener('click', function(event) {
-    if(event.target.tagName === 'LI') {
-        event.target.classList.toggle('checked');
-        saveData();
+    let element = event.target;
+    if(element.tagName === 'LI') {
+        completeTask(element)
     } 
-    else if (event.target.tagName === 'SPAN') {
-        event.target.parentElement.remove();
-        saveData();
+    else if (element.tagName === 'SPAN') {
+        removeTask(element)
     }
 }, false)
 
@@ -40,10 +49,18 @@ function saveData() {
 
 function showTask() {
     let json = localStorage.getItem("task-db");
-    const arr = JSON.parse(json);
-    arr.forEach(function(element, key){
+    if(json!=null) {
+        taskList = JSON.parse(json);
+    }    
+    taskList.forEach(function(element, key){
         let li = document.createElement("li");
         li.innerHTML = element.text
+        li.setAttribute(TASK_ID_ATTR, element.id);
+        console.log(element)
+        if(element.complete == true) {
+            console.log(element.complete)
+            li.classList.toggle("checked")
+        }
         listContainer.appendChild(li);
         let span = document.createElement("span");
         span.innerHTML = "\u00d7";

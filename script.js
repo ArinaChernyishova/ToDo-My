@@ -1,12 +1,19 @@
 const inputBox = document.getElementById("input-box");
 const listContainer = document.getElementById("list-container");
-
+let taskList = []
+class Task {
+    constructor(text ) {
+        this.text = text;
+    }
+}
 function addTask() {
     if(inputBox.value === '') {
         alert('Вы должны что-то написать!')
     } else {
         let li = document.createElement("li");
-        li.innerHTML = inputBox.value;
+        li.innerHTML = inputBox.value;        
+        let t = new Task(li.textContent)
+        taskList.push(t)
         listContainer.appendChild(li);
         let span = document.createElement("span");
         span.innerHTML = "\u00d7";
@@ -28,11 +35,21 @@ listContainer.addEventListener('click', function(event) {
 }, false)
 
 function saveData() {
-    localStorage.setItem("data", listContainer.innerHTML);
+    localStorage.setItem("task-db", JSON.stringify(taskList))
 }
 
 function showTask() {
-    listContainer.innerHTML = localStorage.getItem("data");
+    let json = localStorage.getItem("task-db");
+    const arr = JSON.parse(json);
+    arr.forEach(function(element, key){
+        let li = document.createElement("li");
+        li.innerHTML = element.text
+        listContainer.appendChild(li);
+        let span = document.createElement("span");
+        span.innerHTML = "\u00d7";
+        li.appendChild(span);
+    });
+    
 } 
 
 showTask();

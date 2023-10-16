@@ -1,4 +1,25 @@
 let taskList = []
+let listContainer
+let inputBox
+
+window.onload = init()
+
+function init() {
+    inputBox = document.getElementById("input-box");
+    listContainer = document.getElementById("list-container");
+
+    listContainer.addEventListener('click', function(event) {
+        let element = event.target;
+        if(element.tagName === 'LI') {
+            completeTask(element)
+        } 
+        else if (element.tagName === 'SPAN') {
+            removeTask(element)
+        }
+    }, false)
+
+    showTask();
+}
 
 function addTask() {
     if(inputBox.value === '') {
@@ -33,15 +54,7 @@ function removeTask(element) {
     saveData();
 }
 
-listContainer.addEventListener('click', function(event) {
-    let element = event.target;
-    if(element.tagName === 'LI') {
-        completeTask(element)
-    } 
-    else if (element.tagName === 'SPAN') {
-        removeTask(element)
-    }
-}, false)
+
 
 function saveData() {
     localStorage.setItem("task-db", JSON.stringify(taskList))
@@ -69,4 +82,3 @@ function showTask() {
     
 } 
 
-showTask();

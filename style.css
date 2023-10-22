@@ -43,13 +43,14 @@
     margin-bottom: 25px;
 }
 
-input{
+#input-box{
     flex: 1;
     border: none;
     outline: none;
     background: transparent;
     padding: 10px;
 }
+
 
 button{
     border: none;
@@ -92,8 +93,12 @@ ul li.checked{
 ul li.checked::before{
     background-image: url(img/checked.png);
 }
+.time {
+    display: block;
+    font-size: 10px;
+}
 
-ul li span{
+.btn-delete{
     position: absolute;
     right: 0;
     top: 5px;
@@ -106,6 +111,6 @@ ul li span{
     border-radius: 50%;
 }
 
-ul li span:hover{
+.btn-delete:hover{
     background: #edeef0;
 }

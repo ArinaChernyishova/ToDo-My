@@ -14,7 +14,7 @@ function init() {
         if(element.tagName === 'LI') {
             completeTask(element)
         } 
-        else if (element.tagName === 'SPAN') {
+        else if (element.classList.contains('btn-delete')) {
             removeTask(element)
         }
     }, false)
@@ -26,21 +26,39 @@ function addTask() {
     if(inputBox.value === '') {
         alert('Вы должны что-то написать!')
     } else {
-        let li = document.createElement("li");
-        li.innerHTML = inputBox.value;        
-        let t = new Task(li.textContent)
+        let text = insertLineBrackets(inputBox.value);
+        console.log(text)
+        let t = new Task(text)
         taskList.push(t)
+        let li = document.createElement("li");
+        li.innerHTML = text        
         li.setAttribute(TASK_ID_ATTR, t.id);
         listContainer.appendChild(li);
-        let span = document.createElement("span");
-        span.innerHTML = "\u00d7";
-        let timeSpan = document.createElement("span");
-        timeSpan.innerHTML = `${t.time}`
-        li.appendChild(span);
-        li.appendChild(timeSpan)
+        li.appendChild(getDeleteElement());
+        li.appendChild(getTimeElemeent(t.time))
     }
     inputBox.value = '';
     saveData();
+}
+function insertLineBrackets(text) {
+    text = ''+text
+    while(text.includes("\n")) {
+        text =text.replace("\n", '<br />');
+    }
+    return text
+}
+
+function getTimeElemeent(time) {
+    let timeSpan = document.createElement("span");
+    timeSpan.innerHTML = `<img src="img/time.svg"> ${time}`
+    timeSpan.classList.add("time")
+    return timeSpan;
+}
+function getDeleteElement() {
+    let span = document.createElement("span");
+    span.classList.add("btn-delete")
+    span.innerHTML = "\u00d7";
+    return span
 }
 
 function completeTask(element) {
@@ -71,21 +89,15 @@ function showTask() {
     }    
     taskList.forEach(function(element, key){
         let li = document.createElement("li");
-        `<li></li>`
         li.innerHTML = element.text
         li.setAttribute(TASK_ID_ATTR, element.id);
-        console.log(element)
         if(element.complete == true) {
             console.log(element.complete)
             li.classList.toggle("checked")
         }
         listContainer.appendChild(li);
-        let span = document.createElement("span");
-        span.innerHTML = "\u00d7";
-        li.appendChild(span);
-        let timeSpan = document.createElement("span");
-        timeSpan.innerHTML = `${t.time}`
-        li.appendChild(timeSpan)
+        li.appendChild(getDeleteElement());
+        li.appendChild(getTimeElemeent(element.time))
     });
     
 } 
